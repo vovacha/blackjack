@@ -13,7 +13,6 @@ struct Card {
 
 trait VecCardExt {
     fn count_points(&self) -> u8;
-
     fn stringify(&self) -> String;
 }
 
@@ -23,20 +22,13 @@ impl VecCardExt for Vec<Card> {
         let total = self.iter().map(|s| s.value).sum();
         if total > 21 {
             let aces = self.iter().filter(|&a| *&a.name == "A").count();
-            // TODO: Not sure if it's possible when the first Ace is 11 and the second is 1
             return total - aces as u8 * 10
         }
         total
     }
     
     fn stringify(&self) -> String {
-        // TODO: could be simplified with fmt::Display?
-        let mut cards_str = String::new();
-        for c in self.iter() {
-            cards_str.push_str(&c.name);
-            cards_str.push_str(" ");
-        }
-        cards_str
+        self.iter().map(|c| c.name.to_string()).collect::<Vec<_>>().join(",")
     }
 }
 
@@ -111,7 +103,7 @@ impl Dealer {
                 io::stdin()
                     .read_line(&mut choice)
                     .expect("Failed to read line");
-                    choice = choice.trim().to_lowercase();
+                choice = choice.trim().to_lowercase();
     
                 match &choice[..] {
                     "y" => {
